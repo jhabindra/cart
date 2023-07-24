@@ -1,13 +1,32 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .models import Product
+from math import ceil
+
 
 # Create your views here.
 
 
 def index(request):
+    products = Product.objects.all()
 
-    return render(request, 'shop/index.html')
+    n = len(products)
+    slides = n//4 + ceil(n/4-(n//4))
+    # params = {'no_of_slide': slides, 'range': range(
+    #     1, slides), 'productlist': products}
+    # allProds = [[products, range(1, slides), slides], [
+    #     products, range(1, slides), slides]]
+    allProds = []
+    catProds = Product.objects.values('category', 'id')
+    print(catProds)
+    cats = {item['category'] for item in catProds}
+    print(cats)
+    for cat in cats:
+        prod = Product.objects.filter(category=cat)
+        allProds.append([prod, range(1, slides), slides])
+    params = {'allProds': allProds}
+    return render(request, 'shop/index.html',  params)
 
 
 def about(request):

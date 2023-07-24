@@ -1,1 +1,30 @@
 {% extends 'shop/basic.html'%}
+{% block css % }
+<style>
+    .col-md-3 {
+        display: inline-block;
+        margin-left: -4px;
+    }
+
+    .col-md-3 img {
+        width: 100%;
+        height: auto;
+    }
+
+    body .carousel-indicator {
+        background-color: blue;
+    }
+
+    body .carousel-control-prev-icon,
+    body .carousel-control-next-icon {
+        background-color: blue;
+    }
+
+    body .no-padding {
+        padding-left: 0;
+        padding-right: 0;
+    }
+</style>
+{%endblock %}
+{% block title%}This is title{% endblock %}
+{% block body %} This is body{% endblock %}
