@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Product
+from .models import Product, Contact
 from math import ceil
 
 
@@ -19,9 +19,9 @@ def index(request):
     #     products, range(1, slides), slides]]
     allProds = []
     catProds = Product.objects.values('category', 'id')
-    print(catProds)
+
     cats = {item['category'] for item in catProds}
-    print(cats)
+
     for cat in cats:
         prod = Product.objects.filter(category=cat)
         allProds.append([prod, range(1, slides), slides])
@@ -34,19 +34,37 @@ def about(request):
 
 
 def contact(request):
-    return HttpResponse('This is contact')
+    message = ""
+    if request.method == "POST":
+
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        address = request.POST.get('address', '')
+        phone = request.POST.get('phone', '')
+        desc = request.POST.get('desc', '')
+        contact = Contact(name=name, email=email,
+
+                          phone=phone,
+                          address=address,
+                          desc=desc)
+        contact.save()
+        message = "We will contact you " + name
+        params = {'message': message}
+    return render(request,  'shop/contact.html', {'message': message})
 
 
 def tracker(request):
-    return HttpResponse('THis is tracker page')
+    return render(request, 'shop/tracker.html')
 
 
 def search(request):
     return HttpResponse('THis sis search page')
 
 
-def productView(request):
-    return HttpResponse('THis is productview Page')
+def productView(request, id):
+    product = Product.objects.filter(id=id)
+    print(product)
+    return render(request, 'shop/prodView.html', {'product': product[0]})
 
 
 def checkout(request):
